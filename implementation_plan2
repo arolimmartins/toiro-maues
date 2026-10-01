@@ -1,0 +1,80 @@
+# Plano de Implementação: Contagem Regressiva e Sistema de Fases
+
+Implementação do sistema de **contagem regressiva pré-jogo (3, 2, 1, COLHER!)** e de **progressão de fases** ao cumprir a meta antes do tempo acabar.
+
+---
+
+## 1. Visão Geral das Funcionalidades
+
+### A. Contagem Regressiva Inicial ("3, 2, 1, COLHER!")
+- Ao iniciar a partida, reiniciar ou avançar de fase, o jogo entra em estado de contagem regressiva de 3 segundos.
+- Enquanto a contagem estiver ativa:
+  - O jogador já pode mover as mãos no volante virtual para calibrar a pegada.
+  - Frutos não caem e o cronômetro oficial da fase não é consumido.
+  - Um display visual animado (pulsante, com sombra e cores dinâmicas: 3 Dourado, 2 Laranja, 1 Verde, "COLHER!" Esmeralda) é desenhado no centro da tela.
+  - Efeitos sonoros de *beep* sincronizados (`AudioContext` Web Audio API) tocam em cada número e um acorde triunfante no "COLHER!".
+
+### B. Sistema de Fases e Vitória Antecipada
+- Definição de 3 fases progressivas com identidade amazônica do CETAM:
+  1. **Fase 1 — Floresta Nativa**: Meta de **25 guaranás** | Tempo: **60 segundos** | Velocidade de queda suave.
+  2. **Fase 2 — Comunidade Ribeirinha**: Meta de **35 guaranás** | Tempo: **60 segundos** | Velocidade de queda +25% | Maior incidência de moedas e estrelas de bônus.
+  3. **Fase 3 — Festival do Guaraná CETAM**: Meta de **50 guaranás** | Tempo: **60 segundos** | Desafio mestre com chuva de frutos rápida e folhas secas.
+- **Vitória Antecipada**:
+  - Assim que o jogador atinge a meta antes do tempo acabar, a partida é vencida imediatamente!
+  - O mascote assume a pose de vitória (`char_vitoria.png` com braços erguidos).
+  - Toca a fanfarra de vitória (`playLap()`).
+  - O tempo restante é convertido em **pontos de bônus de velocidade** (`tempo_restante * 50 pts`).
+  - Abre a janela comemorativa com o botão destacado: **"AVANÇAR PARA A FASE [X] ▶"**.
+  - Ao avançar, a pontuação acumulada é preservada e inicia a contagem de 3 segundos para a nova fase.
+  - Ao vencer a Fase 3: comemoração final de "Mestre da Colheita CETAM".
+
+---
+
+## 2. Modificações Propostas
+
+### Frontend / Electron (`src/`)
+
+#### [MODIFY] [`src/game/audio.js`](file:///c:/Users/novo2/Downloads/GestureCarAI_COMPLETO/GestureCarAI/src/game/audio.js)
+- Adicionar `playCountdownBeep(isFinal)`: emite beeps curtos para 3, 2, 1 e um acorde comemorativo para "COLHER!".
+
+#### [MODIFY] [`src/game/harvest_scene.js`](file:///c:/Users/novo2/Downloads/GestureCarAI_COMPLETO/GestureCarAI/src/game/harvest_scene.js)
+- Adicionar controle de fases: `currentPhase` (1 a 3), `phaseConfigs` (nome, meta, tempo, velocidade de spawn, velocidade de queda).
+- Adicionar timer de contagem regressiva `countdownTimer` (3.5s) e controle de estado `isCountingDown`.
+- Implementar métodos `startPhase(phaseNum)` e `advancePhase()`.
+- No método `draw(ctx)`, renderizar o overlay animado do número da contagem regressiva com escala pulsante.
+
+#### [MODIFY] [`src/game/engine.js`](file:///c:/Users/novo2/Downloads/GestureCarAI_COMPLETO/GestureCarAI/src/game/engine.js)
+- Atualizar `_showVictoryScreen()` para diferenciar vitória em fase intermediária (exibindo botão "Avançar para Fase X") de vitória final (Fase 3) ou tempo esgotado.
+- Adicionar método `nextPhase()` acionado pelo botão do modal.
+- Sincronizar o nome da fase atual nos elementos da interface.
+
+#### [MODIFY] [`index.html`](file:///c:/Users/novo2/Downloads/GestureCarAI_COMPLETO/GestureCarAI/index.html) & [`styles.css`](file:///c:/Users/novo2/Downloads/GestureCarAI_COMPLETO/GestureCarAI/styles.css)
+- Adicionar badge da fase ativa no subheader da colheita (`<h2 id="phaseTitle">FASE 1 — FLORESTA NATIVA</h2>`).
+- Adicionar botão `<button id="nextPhaseBtn" class="btn primary-btn pulse-glow">Avançar para Fase 2 ▶</button>` no overlay de vitória.
+- Estilizar o botão de avançar de fase com brilho pulsante esmeralda/dourado.
+
+#### [MODIFY] [`src/app.js`](file:///c:/Users/novo2/Downloads/GestureCarAI_COMPLETO/GestureCarAI/src/app.js)
+- Conectar o evento de clique do botão `nextPhaseBtn` para chamar `engine.nextPhase()`.
+
+---
+
+### Python / Pygame (`game/` & `app.py`)
+- Replicar a mesma lógica de contagem regressiva (3, 2, 1, JÁ) e progressão de fases em `game/harvest_scene.py` e `app.py` para manter as duas versões idênticas.
+
+---
+
+## 3. Plano de Verificação
+
+### Testes Manuais & Verificações
+1. **Contagem Regressiva**:
+   - Iniciar o jogo e verificar se o número "3... 2... 1... COLHER!" aparece no centro do canvas com o som sincronizado.
+   - Conferir se nenhum fruto cai e se o tempo não decresce durante esses 3 segundos.
+2. **Vitória e Mudança de Fase**:
+   - Colher a meta da Fase 1 (ex: 25 guaranás) antes do tempo acabar.
+   - Confirmar se o mascote ergue os braços em vitória, toca o som de vitória e a tela exibe o botão "Avançar para Fase 2 ▶".
+   - Clicar em "Avançar para Fase 2" e conferir se:
+     - O título muda para "FASE 2 — COMUNIDADE RIBEIRINHA".
+     - Dispara a contagem regressiva de 3 segundos da Fase 2.
+     - A pontuação acumulada é mantida e a nova meta passa a valer.
+3. **Tempo Esgotado**:
+   - Deixar o tempo acabar sem atingir a meta e verificar se o botão "Tentar Novamente" reseta a fase atual.

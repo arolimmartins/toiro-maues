@@ -1,0 +1,530 @@
+/* ==========================================================================
+   GestureCar AI — Estilos Oficiais (Fidelidade ao Mockup CETAM)
+   ========================================================================== */
+
+:root {
+  --bg-dark: #040e1a;
+  --card-bg: #07192d;
+  --card-border: #113657;
+  --card-border-glow: rgba(0, 190, 255, 0.25);
+  
+  --cyan-primary: #00d4ff;
+  --cyan-glow: rgba(0, 212, 255, 0.4);
+  --green-accent: #00f090;
+  --green-glow: rgba(0, 240, 144, 0.35);
+  --gold-accent: #ffd000;
+  --orange-turbo: #ff7700;
+  --red-brake: #ff3344;
+  
+  --text-primary: #f0f6fc;
+  --text-secondary: #90adc6;
+  --text-muted: #5e7d99;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-dark);
+  background-image: 
+    radial-gradient(circle at 15% 15%, rgba(0, 80, 140, 0.15) 0%, transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(0, 140, 100, 0.10) 0%, transparent 45%);
+  color: var(--text-primary);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+}
+
+/* ==========================================================================
+   1. BARRA SUPERIOR (HEADER)
+   ========================================================================== */
+.app-header {
+  height: 64px;
+  background: linear-gradient(180deg, #061324 0%, #050f1d 100%);
+  border-bottom: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  z-index: 20;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-icon {
+  width: 38px;
+  height: 38px;
+  color: var(--cyan-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 0 8px var(--cyan-glow));
+}
+
+.title-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.main-title {
+  font-family: 'Orbitron', 'Inter', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #ffffff;
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+}
+
+.subtitle {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  color: var(--cyan-primary);
+  text-transform: uppercase;
+}
+
+.header-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.script-quote {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #4ee6e6;
+  text-shadow: 0 0 8px rgba(78, 230, 230, 0.4);
+}
+
+.motto-pills {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--text-secondary);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+
+.steer-track {
+  flex: 1;
+  height: 5px;
+  background: #0c243a;
+  border-radius: 3px;
+  position: relative;
+}
+
+.steer-knob {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  background: var(--green-accent);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--green-accent);
+  transition: left 0.08s ease-out;
+}
+
+.hand-detected-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--green-accent);
+  transition: color 0.2s ease;
+}
+
+/* CARD 2: GESTOS */
+.gesture-status-box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.wheel-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(0, 240, 144, 0.12);
+  border: 1.5px solid var(--green-accent);
+  color: var(--green-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 10px rgba(0, 240, 144, 0.25);
+  transition: transform 0.1s ease-out;
+}
+
+.gesture-info-meta h3 {
+  font-size: 0.88rem;
+  font-weight: 800;
+  color: var(--green-accent);
+  letter-spacing: 0.5px;
+}
+
+.gesture-info-meta p {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+.confidence-wrap {
+  margin-bottom: 10px;
+}
+
+.confidence-header {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.confidence-header strong {
+  color: var(--text-primary);
+}
+
+.progress-track {
+  width: 100%;
+  height: 7px;
+  background: #092036;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00d4ff, #00f090);
+  border-radius: 4px;
+  box-shadow: 0 0 8px rgba(0, 240, 144, 0.4);
+  transition: width 0.15s ease;
+}
+
+.current-gesture-box {
+  background: rgba(4, 15, 27, 0.6);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.current-gesture-box .label {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+}
+
+.gesture-badge {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--green-accent);
+  letter-spacing: 0.5px;
+}
+
+.gesture-action-sub {
+  font-size: 0.68rem;
+  color: var(--text-secondary);
+  margin-left: auto;
+}
+
+/* CARD 3: TELEMETRIA */
+.speed-readout {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.speed-readout small {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--cyan-primary);
+}
+
+.speed-bar-wrap {
+  width: 100%;
+  height: 8px;
+  background: #092036;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.speed-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #00aaff, #00d4ff);
+  box-shadow: 0 0 10px var(--cyan-glow);
+  transition: width 0.1s ease;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.stat-item {
+  background: rgba(5, 18, 32, 0.5);
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+}
+
+.stat-lbl {
+  color: var(--text-secondary);
+}
+
+.stat-val {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.stat-val.gold {
+  color: var(--gold-accent);
+}
+
+/* CARD 4: GUIA DE GESTOS */
+.gesture-tiles-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.gesture-tile {
+  background: rgba(5, 18, 32, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 6px 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.gesture-tile.active-gesture {
+  background: rgba(0, 240, 144, 0.12);
+  border-color: var(--green-accent);
+  box-shadow: 0 0 8px rgba(0, 240, 144, 0.2);
+}
+
+.gesture-tile.keyboard-tile {
+  grid-column: span 2;
+}
+
+.tile-icon {
+  font-size: 1.1rem;
+}
+
+.tile-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.tile-text strong {
+  font-size: 0.68rem;
+  color: var(--text-primary);
+}
+
+.tile-text small {
+  font-size: 0.58rem;
+  color: var(--text-muted);
+}
+
+.guide-footer-hint {
+  text-align: center;
+  font-size: 0.62rem;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   4. ÁREA PRINCIPAL DA PISTA
+   ========================================================================== */
+.main-game-area {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 100%;
+}
+
+.track-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+}
+
+.track-title-tag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.track-title-tag h2 {
+  font-family: 'Orbitron', 'Inter', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #ffffff;
+}
+
+.pills-cluster {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.telemetry-pill {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  padding: 6px 14px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+}
+
+.pill-icon {
+  font-size: 1.05rem;
+}
+
+.pill-data {
+  display: flex;
+  flex-direction: column;
+}
+
+.pill-title {
+  font-size: 0.62rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.pill-data strong {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.telemetry-pill.highlight-gold {
+  border-color: rgba(255, 208, 0, 0.4);
+}
+
+.telemetry-pill.highlight-gold strong {
+  color: var(--gold-accent);
+}
+
+/* CANVAS DO AUTÓDROMO */
+.canvas-wrapper {
+  flex: 1;
+  position: relative;
+  background: #020810;
+  border: 2px solid var(--card-border);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.6),
+    inset 0 0 30px rgba(0, 0, 0, 0.8);
+}
+
+#gameCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* OVERLAYS NO CANVAS */
+.canvas-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(3, 10, 20, 0.85);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: opacity 0.2s ease;
+}
+
+.canvas-overlay.hidden {
+  display: none;
+}
+
+.overlay-box {
+  background: var(--card-bg);
+  border: 1px solid var(--cyan-primary);
+  border-radius: 16px;
+  padding: 30px 40px;
+  padding: 0 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.action-buttons-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.action-btn {
+  background: rgba(10, 32, 56, 0.8);
+  border: 1px solid rgba(0, 190, 255, 0.3);
+  color: var(--text-primary);
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  border-color: var(--cyan-primary);
+  box-shadow: 0 0 10px var(--cyan-glow);
+  transform: translateY(-1px);
+}
+
+.action-btn.btn-start {
+  background: rgba(0, 240, 144, 0.15);
+  border-color: var(--green-accent);
+  color: var(--green-accent);
+}
+
+.action-btn.btn-start:hover {
+  background: rgba(0, 240, 144, 0.25);
+  box-shadow: 0 0 14px var(--green-glow);
+}
+
+.quote-right {
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.15rem;
+  color: #4ee6e6;
+  text-shadow: 0 0 6px rgba(78, 230, 230, 0.3);
+}
+

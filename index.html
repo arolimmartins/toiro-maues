@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To'iro Maués — CETAM</title>
+  <link rel="icon" type="image/png" href="assets/icon.png">
+  <!-- Google Fonts: Inter, Orbitron para números sci-fi e Dancing Script para a citação -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- MediaPipe Hands & Camera Utils -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <!-- BARRA SUPERIOR (HEADER) -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="logo-icon">
+        <img src="assets/icon.png" alt="To'iro Maués" style="width: 38px; height: 38px; object-fit: contain; border-radius: 50%;">
+      </div>
+      <div class="title-group">
+        <h1 class="main-title">TO'IRO MAUÉS</h1>
+        <p class="subtitle">VISÃO COMPUTACIONAL • CETAM</p>
+      </div>
+    </div>
+
+    <div class="header-center">
+      <span class="script-quote">Inteligência Artificial em Movimento</span>
+      <span class="motto-pills">APRENDA • PRATIQUE • INOVE</span>
+    </div>
+
+    <div class="header-right">
+      <button id="soundToggleBtn" class="status-pill sound-pill" title="Ativar/Desativar Som [M]">
+        <span class="status-dot green"></span>
+        <span id="soundStatusText">SOM ATIVO [M]</span>
+      </button>
+
+      <div class="status-pill fps-pill">
+        <span>FPS: <span id="fpsValue">60</span></span>
+      </div>
+
+      <button id="fullscreenBtn" class="icon-btn" title="Alternar Tela Cheia [F11]">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+          <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+        </svg>
+      </button>
+
+      <button id="settingsBtn" class="icon-btn" title="Configurações">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+          <path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+        </svg>
+      </button>
+
+      <div class="cetam-brand">
+        <svg class="cetam-globe" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6">
+          <circle cx="16" cy="16" r="14"/>
+          <path d="M2 16h28M16 2a22 22 0 0 1 0 28M16 2a22 22 0 0 0 0 28"/>
+          <ellipse cx="16" cy="16" rx="8" ry="14"/>
+        </svg>
+        <div class="cetam-text">
+          <span class="cetam-title">CETAM</span>
+          <span class="cetam-desc">CENTRO DE EDUCAÇÃO<br>TECNOLÓGICA DO AMAZONAS</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTEÚDO PRINCIPAL -->
+  <main class="app-layout">
+    <!-- BARRA LATERAL ESQUERDA (HUD) -->
+    <aside class="hud-sidebar">
+      
+      <!-- CARD 1: CÂMERA & VOLANTE -->
+      <section class="hud-card camera-card">
+        <div class="card-header">
+          <span class="card-icon">📷</span>
+          <h2>CÂMERA & VOLANTE</h2>
+        </div>
+        <div class="camera-select-bar">
+          <label for="cameraSelect" class="cam-select-label">Câmera:</label>
+          <select id="cameraSelect" class="camera-dropdown" title="Selecione qual câmera utilizar">
+            <option value="">Carregando câmeras...</option>
+          </select>
+        </div>
+        <div class="camera-viewport">
+          <video id="webcam" autoplay playsinline muted></video>
+          <canvas id="cameraCanvas"></canvas>
+          <div class="cam-badge-top-left">
+            <span class="status-dot green pulse"></span>
+            <span id="camStatusText">Câmera Ativa</span>
+          </div>
+          <div class="cam-badge-top-right">
+            <span>FPS: <span id="camFps">30</span></span>
+          </div>
+        </div>
+        <div class="camera-footer">
+          <div class="steer-track">
+            <div id="steerKnob" class="steer-knob"></div>
+          </div>
+          <span id="handStatusLabel" class="hand-detected-badge">Mão Detectada</span>
+        </div>
+      </section>
+
+      <!-- CARD 2: DETECÇÃO DE GESTO -->
+      <section class="hud-card gesture-card">
+        <div class="card-header">
+          <span class="card-icon">✋</span>
+          <h2>DETECÇÃO DE GESTO</h2>
+        </div>
+        <div class="gesture-status-box">
+          <div class="wheel-icon-wrap" id="wheelIconWrap">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8 0-1.85.63-3.55 1.69-4.9L10 11.41V14h4v-2.59l4.31-4.31C19.37 8.45 20 10.15 20 12c0 4.41-3.59 8-8 8z"/>
+            </svg>
+          </div>
+          <div class="gesture-info-meta">
+            <h3 id="activeWheelStatus">VOLANTE ATIVO</h3>
+            <p>Controle por gestos</p>
+          </div>
+        </div>
+
+        <div class="confidence-wrap">
+          <div class="confidence-header">
+            <span>Confiança: <strong id="confVal">96%</strong></span>
+          </div>
+          <div class="progress-track">
+            <div id="confBar" class="progress-fill" style="width: 96%;"></div>
+          </div>
+        </div>
+
+        <div class="current-gesture-box">
+          <span class="label">Gesto Atual:</span>
+          <div class="gesture-badge" id="currentGestureBadge">PALMA ABERTA</div>
+          <span class="gesture-action-sub" id="currentGestureSub">Acelerar</span>
+        </div>
+      </section>
+
+      <!-- CARD 3: STATUS DA COLHEITA -->
+      <section class="hud-card telemetry-card">
+        <div class="card-header">
+          <span class="card-icon">🍒</span>
+          <h2>STATUS DA COLHEITA</h2>
+        </div>
+        
+        <div class="speed-readout">
+          <span id="speedValue">0</span> <small>km/h</small>
+        </div>
+        <div class="speed-bar-wrap">
+          <div id="speedBarFill" class="speed-bar-fill" style="width: 0%;"></div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-lbl">🍒 Meta:</span>
+            <span class="stat-val" id="hudLap">0 / 50</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-lbl">⏱️ Tempo:</span>
+            <span class="stat-val" id="hudTime">01:30</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-lbl">🪙 Moedas:</span>
+            <span class="stat-val" id="hudCoins">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-lbl">⭐ Pontos:</span>
+            <span class="stat-val gold" id="hudScore">0</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- CARD 4: GUIA DE GESTOS -->
+      <section class="hud-card guide-card">
+        <div class="card-header">
+          <span class="card-icon">💡</span>
+          <h2>GUIA DE GESTOS</h2>
+        </div>
+
+        <div class="gesture-tiles-grid">
+          <div class="gesture-tile active-gesture" id="tileWheel">
+            <span class="tile-icon">👐</span>
+            <div class="tile-text">
+              <strong>Volante / Mãos</strong>
+              <small>Mover Personagem (Esq/Dir)</small>
+            </div>
+          </div>
+
+          <div class="gesture-tile" id="tilePalm">
+            <span class="tile-icon">🖐️</span>
+            <div class="tile-text">
+              <strong>Palmas / Pegada</strong>
+              <small>Andar Normal</small>
+            </div>
+          </div>
+
+          <div class="gesture-tile" id="tilePeace">
+            <span class="tile-icon">✌️</span>
+            <div class="tile-text">
+              <strong>Dois Dedos (V)</strong>
+              <small>Turbo Colheita 🚀</small>
+            </div>
+          </div>
+
+          <div class="gesture-tile" id="tileFist">
+            <span class="tile-icon">✊</span>
+            <div class="tile-text">
+              <strong>Dois Punhos</strong>
+              <small>Parar no Lugar</small>
+            </div>
+          </div>
+
+          <div class="gesture-tile keyboard-tile">
+            <span class="tile-icon">⌨️</span>
+            <div class="tile-text">
+              <strong>Teclado</strong>
+              <small>A / D ou Setas | [2, 3, 4]: Trocar Personagem</small>
+            </div>
+          </div>
+        </div>
+        <div class="guide-footer-hint">
+          P: Pausa | R: Reiniciar | M: Som | 2-4: Personagens
+        </div>
+      </section>
+
+    </aside>
+
+    <!-- ÁREA PRINCIPAL DA COLHEITA DO GUARANÁ -->
+    <section class="main-game-area">
+      
+      <!-- SUBHEADER DA COLHEITA -->
+      <div class="track-header-bar">
+        <div class="track-title-tag">
+          <span class="flag-icon">🌿</span>
+          <h2 id="phaseTitle">FASE 1: FLORESTA NATIVA</h2>
+        </div>
+
+        <div class="pills-cluster">
+          <div class="telemetry-pill">
+            <span class="pill-icon">🍒</span>
+            <div class="pill-data">
+              <span class="pill-title">Meta</span>
+              <strong id="pillLap">0/50</strong>
+            </div>
+          </div>
+
+          <div class="telemetry-pill">
+            <span class="pill-icon">⏱️</span>
+            <div class="pill-data">
+              <span class="pill-title">Tempo</span>
+              <strong id="pillTime">01:30</strong>
+            </div>
+          </div>
+
+          <div class="telemetry-pill">
+            <span class="pill-icon">🏃</span>
+            <div class="pill-data">
+              <span class="pill-title">Velocidade</span>
+              <strong id="pillSpeed">0 km/h</strong>
+            </div>
+          </div>
+
+          <div class="telemetry-pill highlight-gold">
+            <span class="pill-icon">⭐</span>
+            <div class="pill-data">
+              <span class="pill-title">Pontos</span>
+              <strong id="pillScore">0</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SELETOR DE PERSONAGENS DO CETAM -->
+      <div class="character-select-bar">
+        <span class="char-select-title">👤 PERSONAGEM:</span>
+        <div class="char-pills">
+          <button class="char-pill" id="btnPlayer2" data-player="2" title="Ana (Guaraná) — Coleta Veloz [Tecla 2]">
+            <img src="assets/characters/player2/portrait.png" alt="Ana">
+            <div class="char-info-col">
+              <span class="char-name">Ana</span>
+              <span class="char-ability-badge badge-ana">💨 Coleta Veloz</span>
+            </div>
+          </button>
+          <button class="char-pill active" id="btnPlayer3" data-player="3" title="Lucas (CETAM) — Resistência da Selva [Tecla 3]">
+            <img src="assets/characters/player3/portrait.png" alt="Lucas">
+            <div class="char-info-col">
+              <span class="char-name">Lucas</span>
+              <span class="char-ability-badge badge-lucas">🛡️ Combo Salvo</span>
+            </div>
+          </button>
+          <button class="char-pill" id="btnPlayer4" data-player="4" title="Mayara (Amazônia) — Mestra do Combo [Tecla 4]">
+            <img src="assets/characters/player4/portrait.png" alt="Mayara">
+            <div class="char-info-col">
+              <span class="char-name">Mayara</span>
+              <span class="char-ability-badge badge-mayara">🔥 Combo 2x</span>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- CANVAS DO JOGO (COLHEITA DO GUARANÁ) -->
+      <div class="canvas-wrapper">
+        <canvas id="gameCanvas" width="960" height="520"></canvas>
+        <!-- CANVAS 3D (WebGL). Fica por cima do 2D e so aparece quando a
+             migracao esta ligada; enquanto isso, continua escondido. -->
+        <canvas id="gameCanvas3d" class="hidden" width="960" height="520"></canvas>
+
+        <!-- AVISO RÁPIDO DE CONTROLES (primeira execução) -->
+        <div id="gameToast" class="game-toast"></div>
+        
+        <!-- OVERLAY DE PAUSA -->
+        <div id="pauseOverlay" class="canvas-overlay hidden">
+          <div class="overlay-box">
+            <h2>⏸️ JOGO PAUSADO</h2>
+            <p>Pressione <strong>[ P ]</strong> para continuar</p>
+            <button id="resumeBtn" class="btn primary-btn">Continuar</button>
+          </div>
+        </div>
+
+        <!-- OVERLAY DE VITÓRIA -->
+        <div id="victoryOverlay" class="canvas-overlay hidden">
+          <div class="overlay-box victory-box">
+            <h2>🏆 COLHEITA CONCLUÍDA!</h2>
+            <div class="final-stats">
+              <p>Pontuação Total: <strong id="finalScore" class="gold">0</strong></p>
+              <p id="timeBonusRow" style="display: none;">Bônus de Tempo: <strong id="finalTimeBonus" class="green">+0 pts</strong></p>
+              <p>Tempo Restante: <strong id="finalBestLap" class="cyan">--</strong></p>
+              <p>Guaranás Colhidos: <strong id="finalCoins" class="yellow">0</strong></p>
+            </div>
+            <div class="victory-actions">
+              <button id="nextPhaseBtn" class="btn primary-btn pulse-glow">Avançar para Fase 2 ▶</button>
+              <button id="restartVictoryBtn" class="btn secondary-btn">Repetir Fase [ R ]</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BARRA DE AÇÕES INFERIOR -->
+      <footer class="game-action-bar">
+        <div class="action-buttons-group">
+          <button id="startBtn" class="action-btn btn-start">
+            <span class="btn-icon">▶</span> Iniciar
+          </button>
+          <button id="pauseBtn" class="action-btn btn-pause">
+            <span class="btn-icon">⏸</span> Pausar
+          </button>
+          <button id="restartBtn" class="action-btn btn-restart">
+            <span class="btn-icon">🔄</span> Reiniciar
+          </button>
+          <button id="rankingBtn" class="action-btn btn-ranking">
+            <span class="btn-icon">🏆</span> Ver Ranking
+          </button>
+          <button id="screenshotBtn" class="action-btn btn-capture">
+            <span class="btn-icon">📷</span> Capturar Tela
+          </button>
+        </div>
+
+        <div class="quote-right">
+          <em>" Tecnologia transformando realidades "</em>
+        </div>
+      </footer>
+
+    </section>
+  </main>
+
+  <!-- SCRIPTS DO JOGO -->
+  <script src="src/game/audio.js"></script>
+  <script src="src/game/particles.js"></script>
+
+
+  <script src="src/game/sprites.js"></script>
+  <script src="src/game/harvester.js"></script>
+  <script src="src/game/harvest_scene.js"></script>
+  <script src="src/game/voice-clips.js"></script>
+<script src="src/game/voice.js"></script>
+  <script src="src/game/story.js"></script>
+  <!-- PILHA 3D. A ordem importa: sao scripts classicos, sem modulos, e cada um
+       depende do que esta antes. three.min.js cria o global THREE; a simulacao
+       define as regras; o menino e a cena so desenham o que a simulacao diz. -->
+  <script src="assets/libs/three.min.js"></script>
+  <script src="src/game/harvest_sim.js"></script>
+  <script src="src/game/menino3d.js"></script>
+  <script src="src/game/harvest3d.js"></script>
+  <script src="src/game/harvest3d_app.js"></script>
+  <script src="src/game/engine.js"></script>
+  <script src="src/vision.js"></script>
+  <script src="src/app.js"></script>
+</body>
+</html>
+

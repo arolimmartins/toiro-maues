@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ana Guaraná 3D — Visualizador Interativo Antigravity</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+    body {
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      background: #090f18;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      color: #e2e8f0;
+    }
+    #canvas-container {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    /* UI Overlay Panel */
+    .ui-header {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      z-index: 10;
+      background: rgba(15, 23, 42, 0.82);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      border-radius: 12px;
+      padding: 16px 22px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    }
+    .ui-header h1 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: #10b981;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ui-header p {
+      font-size: 0.82rem;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+    /* Control Toolbar */
+    .ui-controls {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      gap: 12px;
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      border-radius: 30px;
+      padding: 8px 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    }
+    .btn-3d {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #f8fafc;
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .btn-3d:hover {
+      background: rgba(16, 185, 129, 0.25);
+      border-color: #10b981;
+      color: #34d399;
+      transform: translateY(-2px);
+    }
+    .btn-3d.active {
+      background: #10b981;
+      color: #022c22;
+      border-color: #34d399;
+    }
+    /* Info Card Right */
+    .ui-info {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 10;
+      background: rgba(15, 23, 42, 0.82);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 0.80rem;
+      max-width: 240px;
+    }
+    .ui-info h3 {
+      font-size: 0.88rem;
+      color: #38bdf8;
+      margin-bottom: 8px;
+    }
+    .key-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      color: #cbd5e1;
+    }
+    .key-badge {
+      background: rgba(255, 255, 255, 0.12);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.76rem;
+      color: #f1f5f9;
+    }
+    /* Loading overlay */
+    #loading-screen {
+      position: absolute;
+      inset: 0;
+      background: #090f18;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      transition: opacity 0.5s ease;
+    }
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(16, 185, 129, 0.2);
+      border-top-color: #10b981;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="loading-screen">
+    <div class="spinner"></div>
+    <h2 style="color:#10b981; font-weight:700;">Carregando Modelo 3D Ana Guaraná...</h2>
+    <p style="color:#64748b; font-size:0.85rem;">Ana_Guarana_3D.glb</p>
+  </div>
+
+  <div class="ui-header">
+    <h1>🌿 Ana Guaraná 3D</h1>
+    <p>Modelo Tricentenário de Maués — Antigravity Engine</p>
+  </div>
+
+  <div class="ui-info">
+    <h3>🎮 Controles do Modelo</h3>
+    <div class="key-row"><span>Movimento</span> <span class="key-badge">W A S D</span></div>
+    <div class="key-row"><span>Correr</span> <span class="key-badge">SHIFT</span></div>
+    <div class="key-row"><span>Pular</span> <span class="key-badge">ESPAÇO</span></div>
+    <div class="key-row"><span>Coletar</span> <span class="key-badge">E</span></div>
+    <div class="key-row"><span>Rotacionar 3D</span> <span class="key-badge">Arrastar Mouse</span></div>
+  </div>
+
+  <div class="ui-controls">
+    <button class="btn-3d active" id="btnAutoRotate">🔄 Rotação Automática</button>
+    <button class="btn-3d" id="btnLightMode">☀️ Iluminação Dia</button>
+    <button class="btn-3d" id="btnWireframe">🕸️ Wireframe</button>
+    <button class="btn-3d" id="btnResetCam">🎥 Reset Câmera</button>
+    <button class="btn-3d" id="btnClose" onclick="window.history.back()">❌ Voltar</button>
+  </div>
+
+  <div id="canvas-container"></div>
+
+  <!-- Script Libraries local (offline) -->
+  <script src="assets/libs/three.min.js"></script>
+  <script src="assets/libs/GLTFLoader.js"></script>
+  <script src="assets/libs/OrbitControls.js"></script>
+
+  <script>
+    // Configuração do Three.js
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x090f18);
+    scene.fog = new THREE.FogExp2(0x090f18, 0.04);
+
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.set(0, 1.4, 3.2);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.outputEncoding = THREE.sRGBEncoding;
+    container.appendChild(renderer.domElement);
+
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.maxPolarAngle = Math.PI / 2 - 0.02; // Não atravessar o chão
+    controls.target.set(0, 0.9, 0);
+
+    // Iluminação
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.2);
+    scene.add(ambientLight);
+
+    const dirLight = new THREE.DirectionalLight(0x10b981, 2.2);
+    dirLight.position.set(3, 5, 4);
+    dirLight.castShadow = true;
+    dirLight.shadow.mapSize.width = 1024;
+    dirLight.shadow.mapSize.height = 1024;
+    scene.add(dirLight);
+
+    const fillLight = new THREE.DirectionalLight(0x38bdf8, 1.0);
+    fillLight.position.set(-3, 2, -3);
+    scene.add(fillLight);
+
+    // Chão com sombra
+    const planeGeo = new THREE.PlaneGeometry(20, 20);
+    const planeMat = new THREE.ShadowMaterial({ opacity: 0.35 });
+    const ground = new THREE.Mesh(planeGeo, planeMat);
+    ground.rotation.x = -Math.PI / 2;
+    ground.receiveShadow = true;
+    scene.add(ground);
+
+    // Grade do chão
+    const grid = new THREE.GridHelper(20, 20, 0x10b981, 0x1e293b);
+    grid.position.y = -0.001;
+    scene.add(grid);
+
+    // Carregador do Modelo Ana_Guarana_3D.glb
+    let anaModel = null;
+    let autoRotate = true;
+    let isWireframe = false;
+    let lightMode = 'night'; // 'night' ou 'day'
+
+    const loader = new THREE.GLTFLoader();
+    loader.load(
+      'Ana_Guarana_3D_Antigravity/models/Ana_Guarana_3D.glb',
+      (gltf) => {
+        anaModel = gltf.scene;
+
+        // Centraliza e ajusta sombras
+        anaModel.traverse((child) => {
+          if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+          }
+        });
+
+        scene.add(anaModel);
+
+        // Remove tela de carregamento
+        const loaderScreen = document.getElementById('loading-screen');
+        loaderScreen.style.opacity = '0';
+        setTimeout(() => loaderScreen.style.display = 'none', 500);
+      },
+      (xhr) => {
+        console.log((xhr.loaded / xhr.total * 100) + '% carregado');
+      },
+      (error) => {
+        console.error('Erro ao carregar modelo GLB:', error);
+        document.getElementById('loading-screen').innerHTML = '<h3 style="color:#ef4444;">Erro ao carregar Ana_Guarana_3D.glb</h3>';
+      }
+    );
+
+    // Animação Procedural do Modelo (Balanço de movimento conforme GDScript)
+    let clock = new THREE.Clock();
+    let moveTime = 0;
+    const keys = {};
+
+    window.addEventListener('keydown', (e) => keys[e.code] = true);
+    window.addEventListener('keyup', (e) => keys[e.code] = false);
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      const delta = clock.getDelta();
+      controls.update();
+
+      if (anaModel) {
+        if (autoRotate && !controls.state == -1) {
+          anaModel.rotation.y += delta * 0.45;
+        }
+
+        // Movimentação interativa WASD
+        let vx = 0, vz = 0;
+        if (keys['KeyW'] || keys['ArrowUp']) vz -= 1;
+        if (keys['KeyS'] || keys['ArrowDown']) vz += 1;
+        if (keys['KeyA'] || keys['ArrowLeft']) vx -= 1;
+        if (keys['KeyD'] || keys['ArrowRight']) vx += 1;
+
+        const isMoving = (vx !== 0 || vz !== 0);
+        const isShift = keys['ShiftLeft'] || keys['ShiftRight'];
+
+        if (isMoving) {
+          moveTime += delta * (isShift ? 11 : 7);
+          const amp = isShift ? 0.08 : 0.04;
+          anaModel.position.y = Math.sin(moveTime) * amp;
+          anaModel.rotation.z = Math.cos(moveTime * 0.5) * 0.04;
+        } else {
+          // Idle bobbing
+          moveTime += delta * 2;
+          anaModel.position.y = Math.sin(moveTime) * 0.015;
+          anaModel.rotation.z = 0;
+        }
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // Redimensionamento de Janela
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Controles da Interface Toolbar
+    document.getElementById('btnAutoRotate').addEventListener('click', function() {
+      autoRotate = !autoRotate;
+      this.classList.toggle('active', autoRotate);
+    });
+
+    document.getElementById('btnLightMode').addEventListener('click', function() {
+      if (lightMode === 'night') {
+        lightMode = 'day';
+        scene.background.setHex(0xe2e8f0);
+        scene.fog.color.setHex(0xe2e8f0);
+        ambientLight.intensity = 1.8;
+        this.textContent = '🌙 Iluminação Noite';
+        this.classList.add('active');
+      } else {
+        lightMode = 'night';
+        scene.background.setHex(0x090f18);
+        scene.fog.color.setHex(0x090f18);
+        ambientLight.intensity = 1.2;
+        this.textContent = '☀️ Iluminação Dia';
+        this.classList.remove('active');
+      }
+    });
+
+    document.getElementById('btnWireframe').addEventListener('click', function() {
+      isWireframe = !isWireframe;
+      this.classList.toggle('active', isWireframe);
+      if (anaModel) {
+        anaModel.traverse((child) => {
+          if (child.isMesh) child.material.wireframe = isWireframe;
+        });
+      }
+    });
+
+    document.getElementById('btnResetCam').addEventListener('click', () => {
+      camera.position.set(0, 1.4, 3.2);
+      controls.target.set(0, 0.9, 0);
+      if (anaModel) anaModel.rotation.y = 0;
+    });
+  </script>
+</body>
+</html>

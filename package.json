@@ -1,0 +1,65 @@
+{
+  "name": "toiro-maues",
+  "version": "2.0.0",
+  "description": "To'iro Maués - Colheita do Guaraná por Gestos e Visão Computacional (CETAM)",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "node tests/game.test.js",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder --win"
+  },
+  "keywords": [
+    "toiro",
+    "guarana",
+    "ai",
+    "mediapipe",
+    "electron",
+    "game",
+    "cetam"
+  ],
+  "author": "CETAM",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "br.gov.am.cetam.toiromaues",
+    "productName": "To'iro Maués",
+    "copyright": "Copyright © 2026 CETAM",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "styles.css",
+      "src/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "assets/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "To'iro Maués CETAM",
+      "installerIcon": "assets/icon.ico",
+      "uninstallerIcon": "assets/icon.ico",
+      "installerHeaderIcon": "assets/icon.ico"
+    }
+  }
+}

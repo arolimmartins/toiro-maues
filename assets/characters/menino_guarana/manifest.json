@@ -1,0 +1,22 @@
+{
+  "character": "menino_guarana",
+  "animations": {
+    "idle": {"frames": 6, "fps": 6, "loop": true},
+    "walk_right": {"frames": 8, "fps": 10, "loop": true},
+    "walk_left": {"frames": 8, "fps": 10, "loop": true},
+    "walk_front": {"frames": 8, "fps": 10, "loop": true},
+    "walk_back": {"frames": 8, "fps": 10, "loop": true},
+    "run_right": {"frames": 8, "fps": 12, "loop": true},
+    "run_left": {"frames": 8, "fps": 12, "loop": true},
+    "jump": {"frames": 8, "fps": 12, "loop": false},
+    "collect": {"frames": 8, "fps": 10, "loop": false},
+    "lift_basket": {"frames": 8, "fps": 10, "loop": false},
+    "collect_happy": {"frames": 8, "fps": 8, "loop": false},
+    "sad": {"frames": 8, "fps": 6, "loop": true},
+    "angry": {"frames": 8, "fps": 8, "loop": true},
+    "surprise": {"frames": 8, "fps": 10, "loop": false},
+    "hurt": {"frames": 8, "fps": 10, "loop": false},
+    "death": {"frames": 8, "fps": 8, "loop": false},
+    "victory": {"frames": 8, "fps": 8, "loop": false}
+  }
+}

@@ -1,0 +1,216 @@
+/**
+ * Voz do arara - clipes gravados.
+ *
+ * ARQUIVO GERADO por tools/gerar-voz.py. Nao editar a mao.
+ * Mudou a frase em src/game/story.js? Rode o gerador de novo, senao o
+ * papagaio fala uma coisa e a caixa de texto mostra outra.
+ *
+ * marcas[].t  = segundos desde o inicio do clipe
+ * marcas[].ate = quantos caracteres da frase ja foram falados ali
+ */
+const VOICE_META = {
+  "voz": "pt-BR-FranciscaNeural",
+  "rate": "+8%",
+  "pitch": "+14Hz",
+  "gerador": "edge-tts (voz neural pt-BR) via tools/gerar-voz.py",
+  "nota": "marcas[].t em segundos a partir do inicio do clipe; marcas[].ate = deslocamento de caractere ja falado naquele instante"
+};
+
+const VOICE_CLIPS = [
+  {
+    "arquivo": "arara_1.mp3",
+    "indiceCena": 0,
+    "duracao": 10.848,
+    "texto": "Aqui em Maués, a gente vive cercado por belas praias de água doce e areia branca, como a nossa Ponta da Maresia, onde a gente nada na beirada do rio enquanto o sol pinta o céu de dourado.",
+    "marcas": [
+      {
+        "ate": 0,
+        "t": 0.1
+      },
+      {
+        "ate": 187,
+        "t": 10.848
+      }
+    ]
+  },
+  {
+    "arquivo": "arara_2.mp3",
+    "indiceCena": 1,
+    "duracao": 3.504,
+    "texto": "Mas a verdadeira riqueza de Maués é a nossa gente.",
+    "marcas": [
+      {
+        "ate": 0,
+        "t": 0.1
+      },
+      {
+        "ate": 50,
+        "t": 3.504
+      }
+    ]
+  },
+  {
+    "arquivo": "arara_3.mp3",
+    "indiceCena": 2,
+    "duracao": 8.832,
+    "texto": "Somos um povo guerreiro, que traz na veia a força dos Sateré-Mawé e a garra de quem desbrava a Amazônia, mas que ao mesmo tempo é extremamente hospitaleiro.",
+    "marcas": [
+      {
+        "ate": 0,
+        "t": 0.1
+      },
+      {
+        "ate": 156,
+        "t": 8.832
+      }
+    ]
+  },
+  {
+    "arquivo": "arara_4.mp3",
+    "indiceCena": 3,
+    "duracao": 6.192,
+    "texto": "Quem chega de fora é recebido com um abraço largo e um sorriso verdadeiro, como se já fosse da família.",
+    "marcas": [
+      {
+        "ate": 0,
+        "t": 0.1
+      },
+      {
+        "ate": 103,
+        "t": 6.192
+      }
+    ]
+  },
+  {
+    "arquivo": "arara_5.mp3",
+    "indiceCena": 4,
+    "duracao": 8.976,
+    "texto": "E por falar em quem chega, tem um ditado antigo aqui na nossa terra que nunca erra: \"Quem come o jaraqui e prova do guaraná, nunca mais esquece e sempre quer voltar!\"",
+    "marcas": [
+      {
+        "ate": 0,
+        "t": 0.1
+      },
+      {
+        "ate": 166,
+        "t": 8.976
+      }
+    ]
+  },
+  {
+    "arquivo": "arara_6.mp3",
+    "indiceCena": 5,
+    "duracao": 7.44,
+    "texto": "O nosso peixe jaraqui, fritinho na hora com aquela farinha crocante que a gente faz na Ilha de Vera Cruz, tem umpero que enfeitiça.",
+    "marcas": [
+      {
+        "ate": 0,
+        "t": 0.1
+      },
+      {
+        "ate": 131,
+        "t": 7.44
+      }
+    ]
+  },
+  {
+    "arquivo": "arara_7.mp3",
+    "indiceCena": 6,
+    "duracao": 8.976,
+    "texto": "E o nosso elixir da longevidade, o puro guaraná ralado na pedra, dá a energia e a saúde que fazem nossos avós viverem tanto e com tanta alegria.",
+    "marcas": [
+      {
+        "ate": 0,
+        "t": 0.1
+      },
+      {
+        "ate": 144,
+        "t": 8.976
+      }
+    ]
+  },
+  {
+    "arquivo": "arara_8.mp3",
+    "indiceCena": 7,
+    "duracao": 10.128,
+    "texto": "A nossa vida também é feita de arte e cultura que brotam direto da floresta, nos grafismos, nos artesanatos de sementes e cipós, e nos ritmos que embalam a nossa gente.",
+    "marcas": [
+      {
+        "ate": 0,
+        "t": 0.1
+      },
+      {
+        "ate": 168,
+        "t": 10.128
+      }
+    ]
+  },
+  {
+    "arquivo": "arara_9.mp3",
+    "indiceCena": 8,
+    "duracao": 7.248,
+    "texto": "Somos um povo festeiro, que adora celebrar a vida, seja na grande Festa do Guaraná ou nas rodas de conversa na calçada.",
+    "marcas": [
+      {
+        "ate": 0,
+        "t": 0.1
+      },
+      {
+        "ate": 119,
+        "t": 7.248
+      }
+    ]
+  },
+  {
+    "arquivo": "arara_10.mp3",
+    "indiceCena": 9,
+    "duracao": 4.128,
+    "texto": "Tudo isso é guiado por um povo religioso e crente na sua fé.",
+    "marcas": [
+      {
+        "ate": 0,
+        "t": 0.1
+      },
+      {
+        "ate": 60,
+        "t": 4.128
+      }
+    ]
+  },
+  {
+    "arquivo": "arara_11.mp3",
+    "indiceCena": 10,
+    "duracao": 8.304,
+    "texto": "A gente agradece a Deus e aos espíritos da floresta pelo pão de cada dia, pela chuva que molha a roça e pela proteção que nos mantém unidos.",
+    "marcas": [
+      {
+        "ate": 0,
+        "t": 0.1
+      },
+      {
+        "ate": 140,
+        "t": 8.304
+      }
+    ]
+  },
+  {
+    "arquivo": "arara_12.mp3",
+    "indiceCena": 11,
+    "duracao": 7.776,
+    "texto": "Maués é isso tudo misturado: fé, festa, sabor, luta e amor pela nossa terra. É o melhor lugar do mundo para se viver!",
+    "marcas": [
+      {
+        "ate": 0,
+        "t": 0.1
+      },
+      {
+        "ate": 77,
+        "t": 4.884
+      },
+      {
+        "ate": 117,
+        "t": 7.776
+      }
+    ]
+  }
+];
